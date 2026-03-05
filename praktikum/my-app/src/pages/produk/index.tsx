@@ -1,18 +1,18 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import ProdukView from "@/views/produk";
+import TampilanProduk from "@/views/produk";
+import useSWR from "swr";
+import fetcher from "@/utils/swr/fetcher";
 
-const produk = () => {
-    const [isLogin, setIsLogin] = useState(true);
-    const { push } = useRouter();
-    useEffect(() => {
-        if (!isLogin) {
-            push("/auth/login");
-        }
-    }, [isLogin, push]);
+const kategori = () => {
+    const { data, error, isLoading } = useSWR("/api/produk", fetcher);
+
     return (
-        <ProdukView />
+        <div>
+            <TampilanProduk 
+                products={data?.data || []} 
+                isLoading={isLoading} 
+            />
+        </div>
     );
 };
 
-export default produk;
+export default kategori;

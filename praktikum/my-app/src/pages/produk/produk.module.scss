@@ -1,0 +1,194 @@
+.produk {
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --border: #e5e7eb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --accent: #ef4444;
+  --category: #db2777;
+  --shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+
+  width: 100%;
+  padding: 16px 5% 24px;
+
+  &__title {
+    margin: 0 0 20px;
+    text-align: center;
+    font-size: clamp(1.6rem, 2.4vw, 2rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: 0.2px;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+
+    &__skeleton,
+    &__item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 360px;
+    }
+
+    &__skeleton {
+      padding: 12px;
+
+      &__image,
+      &__name,
+      &__size,
+      &__category,
+      &__price {
+        position: relative;
+        border-radius: 8px;
+        background: #e5e7eb;
+        overflow: hidden;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transform: translateX(-100%);
+          background: linear-gradient(
+            90deg,
+            rgba(229, 231, 235, 0) 0%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(229, 231, 235, 0) 100%
+          );
+          animation: skeletonShimmer 1.4s ease-in-out infinite;
+        }
+      }
+
+      &__image {
+        width: 100%;
+        height: 210px;
+        margin-bottom: 12px;
+      }
+
+      &__name {
+        width: 86%;
+        height: 20px;
+        margin-bottom: 10px;
+      }
+
+      &__size {
+        width: 42%;
+        height: 14px;
+        margin-bottom: 8px;
+      }
+
+      &__category {
+        width: 58%;
+        height: 14px;
+        margin-bottom: 8px;
+      }
+
+      &__price {
+        width: 48%;
+        height: 16px;
+      }
+    }
+
+    &__item {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      animation: fadeIn 0.35s ease-out;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+      }
+
+      &__image {
+        width: 100%;
+        height: 210px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        background: var(--surface-soft);
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+
+      &__name {
+        margin: 0 0 8px;
+        font-size: 2rem;
+        line-height: 1.3;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      &__size {
+        margin: 0 0 6px;
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+      }
+
+      &__category {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--category);
+      }
+
+      &__price {
+        margin: auto 0 0;
+        font-size: 2.1rem;
+        color: var(--accent);
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+@keyframes skeletonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .produk {
+    padding: 16px 14px 24px;
+
+    &__content {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+
+      &__skeleton,
+      &__item {
+        min-height: 300px;
+      }
+
+      &__skeleton__image,
+      &__item__image {
+        height: 170px;
+      }
+    }
+  }
+}

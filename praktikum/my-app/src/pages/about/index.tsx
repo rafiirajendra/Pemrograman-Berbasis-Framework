@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import aboutStyles from "./about.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,8 +12,8 @@ export default function Home() {
     <div>
       <h1>Praktikum Next.js Pages Router</h1><br />
       <p>Mahasiswa D4 PBF</p>
-      <nav style={{ marginTop: "2rem" }}>
-        <Link href="/about" style={{ color: "#0070f3", textDecoration: "none", fontSize: "1.2rem" }}>
+      <nav className={aboutStyles.nav}>
+        <Link href="/about" className={aboutStyles.link}>
           → Lihat Halaman About
         </Link>
       </nav>  
