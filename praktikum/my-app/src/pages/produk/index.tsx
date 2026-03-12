@@ -3,13 +3,14 @@ import useSWR from "swr";
 import fetcher from "@/utils/swr/fetcher";
 
 const kategori = () => {
-    const { data, error, isLoading } = useSWR("/api/produk", fetcher);
+    const { data, isLoading } = useSWR("/api/produk", fetcher);
 
     return (
         <div>
             <TampilanProduk 
                 products={data?.data || []} 
-                isLoading={isLoading} 
+                isLoading={isLoading}
+                detailBasePath="/produk"
             />
         </div>
     );

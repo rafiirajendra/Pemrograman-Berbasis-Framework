@@ -1,4 +1,5 @@
 import styles from "../../pages/produk/produk.module.scss";
+import Link from "next/link";
 
 type ProductType = {
     id: string;
@@ -12,9 +13,10 @@ type ProductType = {
 interface TampilanProdukProps {
     products: ProductType[];
     isLoading: boolean;
+    detailBasePath?: string;
 }
 
-const TampilanProduk = ({ products, isLoading }: TampilanProdukProps) => {
+const TampilanProduk = ({ products, isLoading, detailBasePath = "/produk" }: TampilanProdukProps) => {
 
     const SkeletonLoader = () => (
         <>
@@ -37,7 +39,11 @@ const TampilanProduk = ({ products, isLoading }: TampilanProdukProps) => {
                     <SkeletonLoader />
                 ) : (
                     products.map((product: ProductType) => (
-                        <div key={product.id} className={styles.produk__content__item}>
+                        <Link
+                            href={`${detailBasePath}/${product.id}`}
+                            key={product.id}
+                            className={styles.produk__content__item}
+                        >
                             <div className={styles.produk__content__item__image}>
                                 <img src={product.image} alt={product.name} width={165} />
                             </div>
@@ -53,7 +59,7 @@ const TampilanProduk = ({ products, isLoading }: TampilanProdukProps) => {
                             <p className={styles.produk__content__item__price}>
                                 Rp {product.price.toLocaleString("id-ID")}
                             </p>
-                        </div>
+                        </Link>
                     ))
                 )}
             </div>
