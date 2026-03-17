@@ -18,8 +18,9 @@ export async function getStaticProps() {
 
     return {
         props: {
-            products
-        }
+            products: products as ProductType[]
+        },
+        revalidate: 10,
     }
 
 }

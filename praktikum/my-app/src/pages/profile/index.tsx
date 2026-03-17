@@ -1,8 +1,12 @@
+import { useSession } from 'next-auth/react';
+
 const ProfilePage = () => {
+  const { data }:any = useSession();
+
   return (
     <div>
       <h1 >Profile Page</h1>
-      <p>This is the profile page content</p>
+      <h1>Selamat Datang {data?.user?.fullname}</h1>
     </div>
   );
 };
