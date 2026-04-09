@@ -1,5 +1,15 @@
-import { getFirestore, collection, getDocs, getDoc, doc } from "firebase/firestore";
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    getDoc,
+    doc,
+    query,
+    addDoc,
+    where,
+} from "firebase/firestore";
 import app from "./firebase";
+import bcrypt from "bcrypt";
 
 const db = getFirestore(app);
 
@@ -7,8 +17,8 @@ export async function retrieveProducts(collectionName: string) {
     const snapshot = await getDocs(collection(db, collectionName));
     const data = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
-    }))
+        ...doc.data(),
+    }));
     return data;
 }
 
@@ -18,30 +28,61 @@ export async function retrieveProductById(collectionName: string, id: string) {
     return data;
 }
 
-export async function retrieveEvents(collectionName: string) {
-    const snapshot = await getDocs(collection(db, collectionName));
-    const data = snapshot.docs.map((doc) => {
-        const rawData = doc.data() as {
-            date?: string | Date | { seconds: number };
-            [key: string]: any;
-        };
+export async function signUp(
+    userData: {
+        email: string;
+        fullname: string;
+        password: string;
+        role?: string;
+    },
+    callback: (result: { status: "success" | "error"; message: string }) => void,
+) {
+    const normalizedEmail = userData.email.trim().toLowerCase();
+    const trimmedPassword = userData.password.trim();
 
-        let normalizedDate = rawData.date;
-        if (rawData.date instanceof Date) {
-            normalizedDate = rawData.date.toISOString();
-        } else if (
-            rawData.date &&
-            typeof rawData.date === "object" &&
-            "seconds" in rawData.date
-        ) {
-            normalizedDate = new Date(rawData.date.seconds * 1000).toISOString();
-        }
+    if (!normalizedEmail) {
+        callback({
+            status: "error",
+            message: "Email wajib diisi",
+        });
+        return;
+    }
 
-        return {
-            id: doc.id,
-            ...rawData,
-            date: normalizedDate ?? ""
-        };
-    });
-    return data;
+    if (trimmedPassword.length < 6) {
+        callback({
+            status: "error",
+            message: "Password minimal 6 karakter",
+        });
+        return;
+    }
+
+    const q = query(
+        collection(db, "users"),
+        where("email", "==", normalizedEmail),
+    );
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
+    // console.log("Query result:", data);
+
+    if (data.length === 0) {
+        const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
+        await addDoc(collection(db, "users"), {
+            ...userData,
+            email: normalizedEmail,
+            password: hashedPassword,
+            role: userData.role ?? "member",
+        });
+        callback({
+            status: "success",
+            message: "User registered successfully",
+        });
+    } else {
+        callback({
+            status: "error",
+            message: "Email already exists",
+        });
+    }
 }

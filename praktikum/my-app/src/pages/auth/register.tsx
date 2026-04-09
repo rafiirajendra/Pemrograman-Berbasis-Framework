@@ -10,3 +10,4 @@ const halamRegister = () => {
 };
 
 export default halamRegister;
+
