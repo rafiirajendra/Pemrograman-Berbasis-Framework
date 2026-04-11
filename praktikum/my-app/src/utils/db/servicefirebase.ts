@@ -28,6 +28,22 @@ export async function retrieveProductById(collectionName: string, id: string) {
     return data;
 }
 
+export async function signIn(
+    email: string){
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
+    if (data) {
+        return data[0];
+    } else {
+        return null;
+    }
+    
+    }
+
 export async function signUp(
     userData: {
         email: string;
