@@ -4,11 +4,19 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
+const oauthErrorMessageMap: Record<string, string> = {
+    OAuthSignin: "Google sign-in gagal dimulai. Cek konfigurasi OAuth aplikasi.",
+    OAuthCallback: "Google callback gagal. Cek callback URL pada Google Console.",
+    OAuthCreateAccount: "Akun OAuth gagal dibuat.",
+    OAuthAccountNotLinked: "Email ini sudah terdaftar dengan metode login lain.",
+    Callback: "Terjadi masalah saat memproses callback login.",
+};
+
 const TampilanLogin = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { push, query } = useRouter();
 	const callbackUrl = (query.callbackUrl as string) || "/";
-    const [error, setError] = useState("");
+    const [error, setError] = useState((query.error as string) || "");
 
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
@@ -56,9 +64,23 @@ const TampilanLogin = () => {
 		}
 	};
 
+    const handleGoogleSignIn = async () => {
+        setError("");
+        setIsLoading(true);
+        await signIn("google", { callbackUrl });
+    };
+
+    const handleGithubSignIn = async () => {
+        setError("");
+        setIsLoading(true);
+        await signIn("github", { callbackUrl });
+    };
+
+    const displayedError = oauthErrorMessageMap[error] || error;
+
 	return (
             <div className={style.login}>
-                {error && <p className={style.login__error}>{error}</p>}
+				{displayedError && <p className={style.login__error}>{displayedError}</p>}
                 <h1 className={style.login__title}>Halaman login</h1>
                 <div className={style.login__form}>
                     <form onSubmit={handleSubmit}>
@@ -92,6 +114,24 @@ const TampilanLogin = () => {
                         </div>
                         <button type="submit" className={style.login__form__item__button} disabled={isLoading}>
                             {isLoading ? "Loading..." : "Login"}
+                        </button>{" "}
+                        <br /><br />
+                        <button
+                            type="button"
+                            onClick={handleGoogleSignIn}
+                            className={style.login__form__item__button}
+                            disabled={isLoading}
+                            >
+                            {isLoading ? "Loading..." : "sign in with google"}
+                        </button>
+                        <br /><br />
+                        <button
+                            type="button"
+                            onClick={handleGithubSignIn}
+                            className={style.login__form__item__button}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "Loading..." : "sign in with github"}
                         </button>
                     </form>
                     <br />

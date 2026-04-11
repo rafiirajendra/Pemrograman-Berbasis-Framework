@@ -7,11 +7,51 @@ import {
     query,
     addDoc,
     where,
+    updateDoc
 } from "firebase/firestore";
 import app from "./firebase";
 import bcrypt from "bcrypt";
 
 const db = getFirestore(app);
+const usersCollection = collection(db, "users");
+
+type UserDoc = {
+    id: string;
+    email: string;
+    fullname?: string;
+    password?: string;
+    role?: string;
+    image?: string;
+    type?: string;
+};
+
+function normalizeEmail(email: string) {
+    return email.trim().toLowerCase();
+}
+
+async function getUserDocsByEmail(email: string): Promise<UserDoc[]> {
+    const normalizedEmail = normalizeEmail(email);
+    const q = query(usersCollection, where("email", "==", normalizedEmail));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((item) => ({
+        id: item.id,
+        ...(item.data() as Omit<UserDoc, "id">),
+    }));
+}
+
+async function getFirstUserByEmail(email: string): Promise<UserDoc | null> {
+    const users = await getUserDocsByEmail(email);
+    return users[0] ?? null;
+}
+
+async function createUser(data: Omit<UserDoc, "id">) {
+    return addDoc(usersCollection, data);
+}
+
+async function updateUserById(id: string, data: Partial<Omit<UserDoc, "id">>) {
+    return updateDoc(doc(db, "users", id), data);
+}
 
 export async function retrieveProducts(collectionName: string) {
     const snapshot = await getDocs(collection(db, collectionName));
@@ -30,19 +70,8 @@ export async function retrieveProductById(collectionName: string, id: string) {
 
 export async function signIn(
     email: string){
-    const q = query(collection(db, "users"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    }));
-    if (data) {
-        return data[0];
-    } else {
-        return null;
-    }
-    
-    }
+    return getFirstUserByEmail(email);
+}
 
 export async function signUp(
     userData: {
@@ -53,7 +82,7 @@ export async function signUp(
     },
     callback: (result: { status: "success" | "error"; message: string }) => void,
 ) {
-    const normalizedEmail = userData.email.trim().toLowerCase();
+    const normalizedEmail = normalizeEmail(userData.email);
     const trimmedPassword = userData.password.trim();
 
     if (!normalizedEmail) {
@@ -72,20 +101,11 @@ export async function signUp(
         return;
     }
 
-    const q = query(
-        collection(db, "users"),
-        where("email", "==", normalizedEmail),
-    );
-    const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    }));
-    // console.log("Query result:", data);
+    const existingUser = await getFirstUserByEmail(normalizedEmail);
 
-    if (data.length === 0) {
+    if (!existingUser) {
         const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
-        await addDoc(collection(db, "users"), {
+        await createUser({
             ...userData,
             email: normalizedEmail,
             password: hashedPassword,
@@ -101,4 +121,46 @@ export async function signUp(
             message: "Email already exists",
         });
     }
+}
+
+export async function signInWithGoogle(userData: any, callback: any) {
+  try {
+        const normalizedEmail = normalizeEmail(userData.email);
+        const existingUser = await getFirstUserByEmail(normalizedEmail);
+
+        if (existingUser) {
+            const mergedData = {
+                ...userData,
+                email: normalizedEmail,
+                role: existingUser.role || "member",
+            };
+            await updateUserById(existingUser.id, mergedData);
+      callback({
+        status: true,
+        message: "User registered and logged in with Google",
+                data: mergedData,
+      });
+    } else {
+            const newUserData = {
+                ...userData,
+                email: normalizedEmail,
+                role: "member",
+            };
+            await createUser(newUserData);
+      callback({
+        status: true,
+        message: "User registered and logged in with Google",
+                data: newUserData,
+      });
+    }
+    } catch (_error: any) {
+    callback({
+      status: false,
+      message: "Failed to register user with Google",
+    });
+  }
+}
+
+export async function signInWithOAuth(userData: any, callback: any) {
+        return signInWithGoogle(userData, callback);
 }

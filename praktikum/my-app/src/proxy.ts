@@ -19,9 +19,17 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 
+    if (
+        pathname.startsWith("/editor") &&
+        token.role !== "editor" &&
+        token.role !== "admin"
+    ) {
+        return NextResponse.redirect(new URL("/", request.url));
+    }
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/profile/:path*", "/admin/:path*"],
+    matcher: ["/profile/:path*", "/admin/:path*", "/editor/:path*"],
 };
