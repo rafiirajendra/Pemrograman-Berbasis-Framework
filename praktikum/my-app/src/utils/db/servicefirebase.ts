@@ -154,7 +154,7 @@ export async function signUp(
     }
 }
 
-export async function signInWithGoogle(userData: any, callback: any) {
+export async function signInWithGoogle(userData: any) {
   try {
         const normalizedEmail = normalizeEmail(userData.email);
         const existingUser = await getFirstUserByEmail(normalizedEmail);
@@ -166,11 +166,11 @@ export async function signInWithGoogle(userData: any, callback: any) {
                 role: existingUser.role || "member",
             };
             await updateUserById(existingUser.id, mergedData);
-      callback({
+      return {
         status: true,
         message: "User registered and logged in with Google",
                 data: mergedData,
-      });
+      };
     } else {
             const newUserData = {
                 ...userData,
@@ -178,20 +178,20 @@ export async function signInWithGoogle(userData: any, callback: any) {
                 role: "member",
             };
             await createUser(newUserData);
-      callback({
+      return {
         status: true,
         message: "User registered and logged in with Google",
                 data: newUserData,
-      });
+      };
     }
     } catch (_error: any) {
-    callback({
+    return {
       status: false,
       message: "Failed to register user with Google",
-    });
+    };
   }
 }
 
-export async function signInWithOAuth(userData: any, callback: any) {
-        return signInWithGoogle(userData, callback);
+export async function signInWithOAuth(userData: any) {
+        return signInWithGoogle(userData);
 }

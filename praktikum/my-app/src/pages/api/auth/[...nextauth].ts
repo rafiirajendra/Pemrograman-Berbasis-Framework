@@ -86,16 +86,15 @@ export const authOptions: NextAuthOptions = {
                 token.image = data.image;
                 token.type = data.type;
 
-                await signInWithOAuth(data, (result: any) => {
-                    if (result.status) {
-                        token.fullname = result.data?.fullname ?? data.fullname;
-                        token.name = result.data?.fullname ?? data.fullname;
-                        token.email = result.data?.email ?? data.email;
-                        token.image = result.data?.image ?? data.image;
-                        token.type = result.data?.type ?? data.type;
-                        token.role = result.data?.role ?? token.role;
-                    }
-                });
+                const result = await signInWithOAuth(data);
+                if (result.status) {
+                    token.fullname = result.data?.fullname ?? data.fullname;
+                    token.name = result.data?.fullname ?? data.fullname;
+                    token.email = result.data?.email ?? data.email;
+                    token.image = result.data?.image ?? data.image;
+                    token.type = result.data?.type ?? data.type;
+                    token.role = result.data?.role ?? token.role;
+                }
             }
             return token;
         },
