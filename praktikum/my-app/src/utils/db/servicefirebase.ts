@@ -29,6 +29,33 @@ function normalizeEmail(email: string) {
     return email.trim().toLowerCase();
 }
 
+function serializeFirestoreValue(value: any): any {
+    if (value === null || value === undefined) return value;
+
+    if (Array.isArray(value)) {
+        return value.map((item) => serializeFirestoreValue(item));
+    }
+
+    if (value instanceof Date) {
+        return value.toISOString();
+    }
+
+    if (typeof value === "object") {
+        if (typeof value.toDate === "function") {
+            return value.toDate().toISOString();
+        }
+
+        return Object.fromEntries(
+            Object.entries(value).map(([key, nestedValue]) => [
+                key,
+                serializeFirestoreValue(nestedValue),
+            ]),
+        );
+    }
+
+    return value;
+}
+
 async function getUserDocsByEmail(email: string): Promise<UserDoc[]> {
     const normalizedEmail = normalizeEmail(email);
     const q = query(usersCollection, where("email", "==", normalizedEmail));
@@ -57,7 +84,7 @@ export async function retrieveProducts(collectionName: string) {
     const snapshot = await getDocs(collection(db, collectionName));
     const data = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...serializeFirestoreValue(doc.data()),
     }));
     return data;
 }
