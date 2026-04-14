@@ -22,6 +22,23 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Praktikum Performance Checklist
+
+Perubahan yang sudah diterapkan di project ini:
+
+- Optimasi gambar dengan `next/image`
+- Penggunaan font dari `next/font`
+- Integrasi Google Analytics menggunakan `next/script`
+- Dynamic import pada komponen layout
+
+Set Google Analytics ID melalui environment variable:
+
+```bash
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+```
+
+Dokumentasi Lighthouse disimpan di `docs/performance-lighthouse.md`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

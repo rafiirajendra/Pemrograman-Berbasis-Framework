@@ -1,4 +1,5 @@
 import { ProductType } from "../../types/Product.type";
+import Image from "next/image";
 import styles from "./detailProduct.module.scss";
 
 interface DetailProdukProps {
@@ -16,7 +17,12 @@ const DetailProduk = ({ product, isLoading }: DetailProdukProps) => {
             <h1 className={styles.title}>Detail Product</h1>
             <div className={styles.produkdetail}>
                 <div className={styles.produkdetail__image}>
-                    <img src={product.image && product.image} alt={product.name} />
+                    <Image
+                        src={product.image || "/next.svg"}
+                        alt={product.name}
+                        width={600}
+                        height={600}
+                    />
                 </div>
 
                 <div className={styles.produkdetail__info}>
