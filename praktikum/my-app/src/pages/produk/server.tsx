@@ -14,7 +14,13 @@ const halamanProdukServer = (props: { products: ProductType[] }) => {
 export default halamanProdukServer;
 
 export async function getServerSideProps() {
-    const res = await fetch("http://localhost:3000/api/produk");
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    if (!apiBaseUrl) {
+        throw new Error("NEXT_PUBLIC_API_URL is not defined");
+    }
+
+    const res = await fetch(new URL("/api/produk", apiBaseUrl).toString());
     const response = await res.json();
     return {
         props: {

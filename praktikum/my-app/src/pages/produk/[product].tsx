@@ -1,21 +1,34 @@
-import fetcher from "@/utils/swr/fetcher";
+import { GetServerSideProps } from "next";
 import { ProductType } from "@/types/Product.type";
-import { useRouter } from "next/router";
-import useSWR from "swr";
+import { retrieveProductById } from "@/utils/db/servicefirebase";
 import DetailProduk from "@/views/DetailProduct";
 
-const DetailProdukCSRPage = () => {
-    const { query, isReady } = useRouter();
-    const productId = typeof query.product === "string" ? query.product : undefined;
-
-    const { data, error, isLoading } = useSWR(
-        isReady && productId ? `/api/products/${productId}` : null,
-        fetcher
-    );
-
-    const product: ProductType | null = error || !data?.data ? null : data.data;
-
-    return <DetailProduk product={product} isLoading={isLoading} />;
+type DetailProdukPageProps = {
+    product: ProductType | null;
 };
 
-export default DetailProdukCSRPage;
+const DetailProdukPage = ({ product }: DetailProdukPageProps) => {
+    return <DetailProduk product={product} isLoading={false} />;
+};
+
+export default DetailProdukPage;
+
+export const getServerSideProps: GetServerSideProps<DetailProdukPageProps> = async (context) => {
+    const productId = context.params?.product;
+
+    if (typeof productId !== "string") {
+        return { notFound: true };
+    }
+
+    const product = await retrieveProductById("products", productId);
+
+    if (!product) {
+        return { notFound: true };
+    }
+
+    return {
+        props: {
+            product: product as ProductType,
+        },
+    };
+};
