@@ -16,11 +16,23 @@ const EventSSGPage = (props: { events: EventType[] }) => {
 export default EventSSGPage;
 
 export async function getStaticProps() {
-    const events = await retrieveEvents("event");
+    try {
+        const events = await retrieveEvents("event");
 
-    return {
-        props: {
-            events
-        }
-    };
+        return {
+            props: {
+                events,
+            },
+            revalidate: 60,
+        };
+    } catch (error) {
+        console.error("Failed to fetch events during static generation:", error);
+
+        return {
+            props: {
+                events: [],
+            },
+            revalidate: 60,
+        };
+    }
 }

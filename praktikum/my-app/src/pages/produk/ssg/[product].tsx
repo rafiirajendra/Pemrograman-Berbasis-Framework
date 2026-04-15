@@ -14,16 +14,25 @@ const DetailProdukSSGPage = ({ product }: DetailProdukPageProps) => {
 export default DetailProdukSSGPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const products = await retrieveProducts("products");
+    try {
+        const products = await retrieveProducts("products");
 
-    const paths = products.map((product: { id: string }) => ({
-        params: { product: product.id },
-    }));
+        const paths = products.map((product: { id: string }) => ({
+            params: { product: product.id },
+        }));
 
-    return {
-        paths,
-        fallback: false,
-    };
+        return {
+            paths,
+            fallback: "blocking",
+        };
+    } catch (error) {
+        console.error("Failed to fetch product paths during static generation:", error);
+
+        return {
+            paths: [],
+            fallback: "blocking",
+        };
+    }
 };
 
 export const getStaticProps: GetStaticProps<DetailProdukPageProps> = async (context) => {
@@ -33,15 +42,28 @@ export const getStaticProps: GetStaticProps<DetailProdukPageProps> = async (cont
         return { notFound: true };
     }
 
-    const data = await retrieveProductById("products", productId);
+    try {
+        const data = await retrieveProductById("products", productId);
 
-    if (!data) {
-        return { notFound: true };
+        if (!data) {
+            return {
+                notFound: true,
+                revalidate: 60,
+            };
+        }
+
+        return {
+            props: {
+                product: data as ProductType,
+            },
+            revalidate: 60,
+        };
+    } catch (error) {
+        console.error("Failed to fetch product during static generation:", error);
+
+        return {
+            notFound: true,
+            revalidate: 60,
+        };
     }
-
-    return {
-        props: {
-            product: data as ProductType,
-        },
-    };
 };
