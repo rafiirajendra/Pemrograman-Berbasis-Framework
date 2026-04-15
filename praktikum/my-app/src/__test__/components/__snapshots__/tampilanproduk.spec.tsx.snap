@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TampilanProduk Component renders product component with snapshot 1`] = `
+<div>
+  <div
+    class="produk"
+  >
+    <h1
+      class="produk__title"
+      data-testid="product-title"
+    >
+      Daftar Produk
+    </h1>
+    <div
+      class="produk__content"
+    >
+      <a
+        class="produk__content__item"
+        data-testid="product-item-1"
+        href="/produk/1"
+      >
+        <div
+          class="produk__content__item__image"
+        >
+          <img
+            alt="Shoes A"
+            height="200"
+            src="/img1.jpg"
+            width="200"
+          />
+        </div>
+        <h4
+          class="produk__content__item__name"
+        >
+          Shoes A
+        </h4>
+        <h4
+          class="produk__content__item__size"
+        >
+          M
+        </h4>
+        <p
+          class="produk__content__item__category"
+        >
+          Shoes
+        </p>
+        <p
+          class="produk__content__item__price"
+        >
+          Rp 
+          250.000
+        </p>
+      </a>
+      <a
+        class="produk__content__item"
+        data-testid="product-item-2"
+        href="/produk/2"
+      >
+        <div
+          class="produk__content__item__image"
+        >
+          <img
+            alt="Shoes B"
+            height="200"
+            src="/img2.jpg"
+            width="200"
+          />
+        </div>
+        <h4
+          class="produk__content__item__name"
+        >
+          Shoes B
+        </h4>
+        <h4
+          class="produk__content__item__size"
+        >
+          L
+        </h4>
+        <p
+          class="produk__content__item__category"
+        >
+          Shoes
+        </p>
+        <p
+          class="produk__content__item__price"
+        >
+          Rp 
+          350.000
+        </p>
+      </a>
+      <a
+        class="produk__content__item"
+        data-testid="product-item-3"
+        href="/produk/3"
+      >
+        <div
+          class="produk__content__item__image"
+        >
+          <img
+            alt="Shoes C"
+            height="200"
+            src="/img3.jpg"
+            width="200"
+          />
+        </div>
+        <h4
+          class="produk__content__item__name"
+        >
+          Shoes C
+        </h4>
+        <h4
+          class="produk__content__item__size"
+        >
+          XL
+        </h4>
+        <p
+          class="produk__content__item__category"
+        >
+          Shoes
+        </p>
+        <p
+          class="produk__content__item__price"
+        >
+          Rp 
+          450.000
+        </p>
+      </a>
+    </div>
+  </div>
+</div>
+`;

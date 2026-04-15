@@ -18,13 +18,13 @@ const Navbar = () => {
         MyApp
       </div> */}
 
-      <div className={styles.navbar__brand} id="title"></div>
+      <div className={styles.navbar__brand} id="title" data-testid="navbar-brand"></div>
       <Script id="title-script" strategy='lazyOnload' >
         {`
           document.getElementById("title").innerHTML = 'MyApp';`}
       </Script>
 
-      <div className={styles.navbar__right}>
+      <div className={styles.navbar__right} data-testid="navbar-right">
         {data ? (
           <>
             <div className={styles.navbar__user}>

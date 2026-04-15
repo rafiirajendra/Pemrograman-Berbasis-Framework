@@ -10,7 +10,6 @@ const Kategori = () => {
             <TampilanProduk 
                 products={data?.data || []} 
                 isLoading={isLoading}
-                detailBasePath="/produk"
             />
         </div>
     );

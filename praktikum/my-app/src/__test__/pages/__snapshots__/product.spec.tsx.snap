@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Product Page renders product page with snapshot 1`] = `
+<div>
+  <div>
+    <div
+      class="produk"
+    >
+      <h1
+        class="produk__title"
+        data-testid="product-title"
+      >
+        Daftar Produk
+      </h1>
+      <div
+        class="produk__content"
+      >
+        <a
+          class="produk__content__item"
+          data-testid="product-item-1"
+          href="/produk/1"
+        >
+          <div
+            class="produk__content__item__image"
+          >
+            <img
+              alt="Product 1"
+              data-nimg="1"
+              decoding="async"
+              height="200"
+              loading="lazy"
+              src="/_next/image?url=%2Fimg1.jpg&w=640&q=75"
+              srcset="/_next/image?url=%2Fimg1.jpg&w=256&q=75 1x, /_next/image?url=%2Fimg1.jpg&w=640&q=75 2x"
+              style="color: transparent;"
+              width="200"
+            />
+          </div>
+          <h4
+            class="produk__content__item__name"
+          >
+            Product 1
+          </h4>
+          <h4
+            class="produk__content__item__size"
+          >
+            M
+          </h4>
+          <p
+            class="produk__content__item__category"
+          >
+            Category 1
+          </p>
+          <p
+            class="produk__content__item__price"
+          >
+            Rp 
+            100.000
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -5,9 +5,9 @@ const Skeleton = () => {
     const skeletonCount = Array.from({ length: 6 });
 
     return (
-        <div className={styles.skeleton__container}>
+        <div className={styles.skeleton__container} data-testid="skeleton-container">
             {skeletonCount.map((_, index) => (
-                <div key={index} className={styles.skeleton__item}>
+                <div key={index} className={styles.skeleton__item} data-testid={`skeleton-item-${index}`}>
                     <div className={styles.skeleton__image}></div>
                     <div className={styles.skeleton__name}></div>
                     <div className={styles.skeleton__size}></div>

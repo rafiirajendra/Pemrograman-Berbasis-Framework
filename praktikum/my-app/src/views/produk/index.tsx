@@ -34,7 +34,7 @@ const TampilanProduk = ({ products, isLoading, detailBasePath = "/produk" }: Tam
 
     return (
         <div className={styles.produk}>
-            <h1 className={styles.produk__title}>Daftar Produk</h1>
+            <h1 className={styles.produk__title} data-testid="product-title">Daftar Produk</h1>
             <div className={styles.produk__content}>
                 {isLoading ? (
                     <SkeletonLoader />
@@ -44,7 +44,8 @@ const TampilanProduk = ({ products, isLoading, detailBasePath = "/produk" }: Tam
                             href={`${detailBasePath}/${product.id}`}
                             key={product.id}
                             className={styles.produk__content__item}
-                        >
+                                data-testid={`product-item-${product.id}`}
+                            >
                             <div className={styles.produk__content__item__image}>
                                 <Image src={product.image} alt={product.name} width={200} height={200} />
                             </div>

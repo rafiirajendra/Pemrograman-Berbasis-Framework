@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "jest -u",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4",
@@ -24,12 +27,19 @@
     "swr": "^2.4.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/bcrypt": "^6.0.0",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "sass": "^1.97.3",
     "typescript": "^5"
   },
   "overrides": {
     "ajv": "^8.18.0",
-    "minimatch": "^10.2.1"
+    "test-exclude": {
+      "minimatch": "^3.1.2"
+    }
   }
 }
